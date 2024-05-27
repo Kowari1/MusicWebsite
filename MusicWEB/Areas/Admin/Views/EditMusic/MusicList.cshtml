@@ -1,0 +1,54 @@
+﻿@{
+    Layout = "_Layout";
+}
+<script src="/js/musicList.js"></script>
+
+<div>
+    <form method="get" action="/Home/Search">
+        <input type="text" name="searchQuery" placeholder="Введите запрос" />
+        <button type="submit">Поиск</button>
+    </form>
+
+    <h1>Music List</h1>
+    <a asp-action="Add_EditMusic">Add Music</a>
+    <table id="musicTable">
+        <thead>
+            <tr>
+                <th>
+                    Image
+                </th>
+                <th>
+                    Title
+                </th>
+                <th>
+                    Genre
+                </th>
+                <th>
+                    Options
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var obj in Model)
+            {
+                <tr>
+                    <td>
+                        <img class="music-image" src="@obj.ImageUrl" data-music-url="@obj.MusicUrl" />
+                    </td>
+
+                    <td>
+                        @obj.Title
+                    </td>
+
+                    <td>
+                        @obj.Genre.Name
+                    </td>
+                    <td>
+                        <a asp-action="Add_EditMusic" asp-route-id="@obj.Id">Edit</a>
+                        <input type="button" value="Delete" onclick="confirmDelete('@obj.Id')" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

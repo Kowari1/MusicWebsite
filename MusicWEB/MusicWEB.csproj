@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\files\image\GenreImages\" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0" />
+    <Folder Include="wwwroot\files\audio\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MusicWEB.DataAcess\MusicWEB.DataAcess.csproj" />
+    <ProjectReference Include="..\MusicWEB.Models\MusicWEB.Models.csproj" />
+    <ProjectReference Include="..\MusicWEB.Utility\MusicWEB.Utility.csproj" />
+  </ItemGroup>
+
+</Project>

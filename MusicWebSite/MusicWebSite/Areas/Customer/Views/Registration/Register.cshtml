@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@model User
+
+<form method="post" enctype="multipart/form-data">
+    <div>
+        <h4>Name</h4>
+        <input asp-for="Name"/>
+    </div>
+
+    <div>
+        <h4>Password</h4>
+        <input asp-for="Password"/>
+    </div>
+
+    <div>
+        <h4>Password</h4>
+        <input asp-for="Password"/>
+    </div>
+
+    <div>
+        <h4>Email</h4>
+        <input asp-for="Email"/>
+    </div>
+
+    <div>
+        <h4>Addmin role</h4>
+        <input type="checkbox"/>
+    </div>
+
+    <div>
+        <h4>Profile picture</h4>
+        <span class="circle-image">
+            <img src="" />
+        </span>
+        <input id="imageFileInput" type="file" name="imageFile" onchange="previewImage()" />
+    </div>
+</form>

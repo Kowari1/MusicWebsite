@@ -1,0 +1,5 @@
+﻿@font-face {
+    font-family: 'ClimateCrisis';
+    src: url('/fonts/ClimateCrisis.woff2') format('woff2'),
+        url('/fonts/ClimateCrisis.woff') format('woff');
+}

@@ -1,0 +1,96 @@
+﻿@{
+    Layout = "_Layout";
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+<body>
+    <div class="track-page">     
+        <h1 class="animated-element">Genre List</h1>
+        <div class="genres-list">
+                @foreach (var obj in Model.Genres)
+                {
+                <div class="genre-container animated-element">
+                    <span class="circle-image">
+                        <a href="/Home/Search?searchQuery=@obj.Name">
+                        <img src="@obj.ImageUrl" />
+                        </a>
+                    </span>
+                    <span>@obj.Name</span>
+                </div>
+                }            
+        </div>
+
+            <div class="expand-btn">
+                <button class="angle-down-btn" onclick="expandGenres()">
+                  <i class="fas fa-angle-down"></i>
+                </button>
+                <button class="angle-up-btn" onclick="collapseGenres()">
+                  <i class="fas fa-angle-up"></i>
+                </button>
+            </div>       
+        
+        <h1 class="animated-element">Music List</h1>
+    <div class="track-list">           
+            @foreach (var obj in Model.Music)
+            {
+                <div class="track-container animated-element">
+                    <div class="image-container" data-id="@obj.Id" data-music-url="@obj.MusicUrl" data-image-url="@obj.ImageUrl">
+                        <img class="music-image" src="@obj.ImageUrl"/>
+                        <i class="fas fa-play play-icon"></i>
+                        <i class="fas fa-pause pause-icon"></i>
+                    </div>
+                        <span >@obj.Title</span>
+                        @if (!User.IsInRole("Admin"))
+                        {
+                        <button type="button" onclick="addMusic('@obj.Id')" class="add-button">
+                            <i class="fas fa-plus"></i>     
+                        </button>
+                        }
+
+                </div>
+            }
+    </div>
+        <div id="notification"></div>
+    </div>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log('DOMContentLoaded event fired');
+        const inputField = document.querySelector('.search input');
+        const suggestions = document.querySelectorAll('.suggestions li');       
+
+        suggestions.forEach(suggestion => {
+            suggestion.addEventListener('click', function () {
+                console.log('Suggestion clicked');
+                inputField.classList.add('selected');
+            });
+        });       
+    });
+
+    function addMusic(id) {
+        $.ajax({
+            type: "POST",
+            url: "/Home/AddMusicPlayList",
+            data: { id: id },
+            success: function (response) {
+                $("#notification").text(response.message);
+            }
+        });
+    }
+
+    function expandGenres() {
+        var genresList = document.querySelector('.genres-list');
+        var genreContainers = genresList.querySelectorAll('.genre-container');
+        genresList.style.maxHeight = 3000 + 'px';
+        document.querySelector('.angle-down-btn').style.display = 'none';
+        document.querySelector('.angle-up-btn').style.display = 'inline';
+    }
+
+    function collapseGenres() {
+        var genresList = document.querySelector('.genres-list');
+        genresList.style.maxHeight = 150 + 'px';
+        document.querySelector('.angle-down-btn').style.display = 'inline';
+        document.querySelector('.angle-up-btn').style.display = 'none';
+    }
+</script>

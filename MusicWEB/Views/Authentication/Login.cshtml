@@ -1,0 +1,26 @@
+﻿@{
+    Layout = "_Layout";
+}
+@model LoginUserVM
+
+<div>
+<form method="post">
+    <div>
+        <h4>Email</h4>
+        <input asp-for="Email" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div>
+        <h4>Password</h4>
+        <input type="password" asp-for="Password" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <div>
+        <button type="submit">Login</button>
+    </div>
+    
+</form>
+    <a asp-controller="Registration" asp-action="CreateUser">Register</a>
+</div>

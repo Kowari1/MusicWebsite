@@ -1,0 +1,48 @@
+﻿@{
+    Layout = "_Layout";
+}
+@model IEnumerable<Music>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+<body>
+    <h1>Music List</h1>
+    <div class="track-list">
+    @foreach (var obj in Model)
+    {
+        <div class="track-container">
+                <div class="image-container" data-id="@obj.Id" data-music-url="@obj.MusicUrl">
+                    <img class="music-image" src="@obj.ImageUrl" />
+                    <i class="fas fa-play play-icon"></i>
+                    <i class="fas fa-pause pause-icon"></i>
+                </div>
+                <span>@obj.Title</span>
+                <input type="button" value="Delete" onclick="confirmDelete('@obj.Id')" />
+        </div>
+    }
+        </div>
+</body>
+
+<script>
+    function confirmDelete(id) {
+
+        if (confirm("Вы уверены, что хотите удалить эту запись? " + id)) {
+
+            deleteMusic(id);
+        }
+    }
+
+    function deleteMusic(id) {
+        $.ajax({
+            type: "POST",
+            url: "/Customer/PlayList/DeleteMusic",
+            data: { id: id },
+            success: function (response) {
+                console.log("Музыка успешно удалена");
+                $('#musicTable-' + id).remove();
+            },
+            error: function () {
+                alert('Failed to delete music.');
+            }
+        });
+    }
+</script>

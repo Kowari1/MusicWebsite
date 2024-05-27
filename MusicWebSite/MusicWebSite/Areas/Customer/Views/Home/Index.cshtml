@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<div>
+    <h1>Music List</h1>
+    <table id="musicTable">
+        <thead>
+            <tr>
+                <th>
+                </th>              
+                <th>
+                </th>
+                <th>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var obj in Model)
+            {
+                <tr>
+                    <td>
+                        <img class="music-image" src="@obj.ImageUrl" />
+                    </td>
+
+                    <td>
+                        @obj.Title
+                    </td>
+                    <td>
+                        <audio controls src="@obj.MusicUrl" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

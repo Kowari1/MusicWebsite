@@ -1,0 +1,202 @@
+﻿@using System.Security.Claims
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    var currentController = ViewData["CurrentController"] as string;
+    var currentAction = ViewData["CurrentAction"] as string;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MusicWebSite</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/search.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/MusicWebSite.styles.css" asp-append-version="true" />
+    <script src="/js/player.js"></script>
+    <script src="/js/progress-bar.js"></script>
+    <script src="/js/navPanel.js"></script>
+</head>
+<body>
+    <header>
+        <nav class="main-navbar flex-container fixed-element">
+            <div class="navbar-logo">
+                <a class="navbar-brand text-white align-self-start" asp-area="" asp-controller="Home" asp-action="Index">MusicWebSite</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+            <ul class="navbar-ul">
+                <li class="nav-item">
+                    <a class="nav-link text-white @(currentController == "Home" && currentAction == "Index" ? "active" : "")" asp-controller="Home" asp-action="Index">Main</a>
+                </li>
+                @if (User.IsInRole("Admin"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link text-white @(currentController == "EditMusic" && currentAction == "MusicList" ? "active" : "")" asp-area="Admin" asp-controller="EditMusic" asp-action="MusicList">Add</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white @(currentController == "Registration" && currentAction == "CreateUser" ? "active" : "")" asp-controller="Registration" asp-action="CreateUser">Add User</a>
+                    </li>
+                }
+                else if (User.IsInRole("User"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link text-white @(currentController == "PlayList" && currentAction == "PlayList" ? "active" : "")" asp-area="Customer" asp-controller="PlayList" asp-action="PlayList">PlayList</a>
+                    </li>
+                }
+                <form method="get" action="/Home/Search">
+                    <div class="search-container">
+                        <div class="search">
+                            <input type="search" name="searchQuery" placeholder="Type to search" />
+                            <button type="button" class="search-button">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </ul>
+
+            @if (HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+            {
+                <div class="navbar-profile">
+                    <span>
+                        <a class="text-white" asp-controller="Authentication" asp-action="Logout">Logout</a>
+                    </span>
+                    <span>@User.Identity.Name</span>
+                    <span class="circle-image">
+                        <img src="@User.Claims.FirstOrDefault(c => c.Type == "UserImage")?.Value" />
+                    </span>
+                </div>
+            }
+            else
+            {
+                <div class="navbar-profile">
+                    <a class="nav-link text-white outlined-text" asp-controller="Authentication" asp-action="Login">Login</a>
+                    <span class="circle-image">
+                        <img src="" />
+                    </span>
+                </div>
+            }
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3" id="main-content">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted mt-3" style="position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); text-align: center; width: 100%;">
+        <div class="progress-container">
+            <input class="progress-bar" type="range" min="0" max="100" value="0">
+            <div class="progress" style="width: 0;"></div>
+        </div>
+        <div id="footer-player-container">
+            <div class="custom-audio-player">
+                <!-- Левые элементы -->
+                <div class="left-controls">
+                    <img class="cover-track" src="" />
+                    <span class="player-track-title"></span>
+                    <button class="back-btn">
+                        <i class="fas fa-backward"></i>
+                    </button>
+                </div>
+
+                <!-- Кнопка воспроизведения/паузы в центре -->
+                <div class="center-controls">
+                    <button class="play-btn">
+                        <i class="play-icon fas fa-play"></i>
+                    </button>
+                    <button class="pause-btn">
+                        <i class="pause-icon fas fa-pause"></i>
+                    </button>
+                </div>
+
+                <!-- Правые элементы -->
+                <div class="right-controls">
+                    <button class="next-btn">
+                        <i class="fas fa-forward"></i>
+                    </button>
+                    <div class="volume-controls-container">
+                        <button class="volum-up-btn">
+                            <i class="fas fa-volume-up"></i>
+                        </button>
+                        <button class="volume-off-btn">
+                            <i class="fas fa-volume-off"></i>
+                        </button>
+                        <input class="volume-slider" type="range" min="0" max="1" step="0.1" value="1" />
+                    </div>
+                    <div class="time-indicators">
+                        <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+                    </div>
+                </div>
+            </div>
+            <audio class="audio-element" src=""></audio>
+        </div>
+        <div class="container">
+            &copy; 2024 - MusicWebSite - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const links = document.querySelectorAll('.nav-link');
+
+            function setActiveLink() {
+                links.forEach(link => link.classList.remove('active'));
+                this.classList.add('active');
+            }
+
+            links.forEach(link => link.addEventListener('click', setActiveLink));
+        });
+
+        $(window).on('popstate', function (e) {
+            const state = e.originalEvent.state;
+            if (state) {
+                const url = state.path;
+                const mainContent = $('#main-content');
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function (data) {
+                        const newContent = $(data).find('#main-content').html();
+                        mainContent.html(newContent);
+                    },
+                    error: function () {
+                        alert('Failed to load content.');
+                    }
+                });
+            }
+        });
+         
+        $(document).on('click', 'a.nav-link', function (e) {
+            e.preventDefault();
+            const url = $(this).attr('href');
+            history.pushState({ path: url }, '', url);
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (data) {
+                    const newContent = $(data).find('#main-content').html();
+                    $('#main-content').html(newContent);
+                },
+                error: function () {
+                    alert('Failed to load content.');
+                }
+            });
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,75 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@model MusicVM
+<script src="/js/addMusic.js"></script>
+
+<form method="post" enctype="multipart/form-data" asp-action="Create">
+    <div>
+        <input type="hidden" asp-for="@Model.Music.Id" />
+        <input type="hidden" asp-for="@Model.Music.ImageUrl" />
+        <input type="hidden" asp-for="@Model.Music.MusicUrl" />
+        <div>
+            <h1>Music Title</h1>
+            <input asp-for="Music.Title"/>
+            <span asp-validation-for="Music.Title" class="text-danger"></span>
+        </div>
+        <div>
+            <h1>Genre</h1>
+            <select asp-for="Music.GenreId" asp-items="Model.CategoryList">
+                <option disabled selected>Select Category</option>
+            </select>
+            <span asp-validation-for="Music.GenreId" class="text-danger"></span>
+        </div>
+        @if (!string.IsNullOrEmpty(Model.Music.ImageUrl))
+        {
+            <div>
+                <h1>Image</h1>
+                <img id="imagePreview" src="@Model.Music.ImageUrl" alt="Uploaded Image" />
+                <input id="imageFileInput" type="file" name="imageFile" onchange="previewImage()" />
+            </div>
+        }
+        else
+        {
+            <div>
+                <h1>Image</h1>
+                <input id="imageFileInput" type="file" name="imageFile" onchange="previewImage()" />
+                <img id="imagePreview" src="#" alt="Uploaded Image" style="display:none;" />
+            </div>
+        }
+        <div>
+            @if (!string.IsNullOrEmpty(Model.ErrorMessageForImage))
+            {
+                <span class="text-danger">@Model.ErrorMessageForImage</span>
+            }
+        </div>
+        @if (!string.IsNullOrEmpty(Model.Music.ImageUrl))
+        {
+            <div>
+                <h1>Audio</h1>
+                <audio id="audioPreview" controls>
+                    <source src="@Model.Music.MusicUrl" type="audio/mpeg">
+                </audio>
+                <input id="audioFileInput" type="file" name="audioFile" onchange="previewAudio()" />
+            </div>
+        }
+        else
+        {
+            <div>
+                <h1>Audio</h1>
+                <input id="audioFileInput" type="file" name="audioFile" onchange="previewAudio()" />
+                <audio id="audioPreview" controls style="display:none" />
+            </div>
+        }
+        <div>
+            @if (!string.IsNullOrEmpty(Model.ErrorMessageForAudio))
+            {
+                <span class="text-danger">@Model.ErrorMessageForAudio</span>
+            }
+        </div>
+        <div>
+            <button type="submit">Create</button>
+        </div>
+    </div>
+</form>
+
